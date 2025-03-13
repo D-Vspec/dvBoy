@@ -47,7 +47,7 @@ impl CPU {
             let frame_duration = Duration::from_secs_f64(1.0 / 60.0);
 
             if elapsed < frame_duration {
-                std::thread::sleep(frame_duration - elapsed);
+                Self::precise_delay(frame_duration - elapsed);
             }
 
             start_time = Instant::now();
