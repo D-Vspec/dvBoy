@@ -5,7 +5,7 @@ pub struct Memory {
 
 impl Memory {
     pub fn new() -> Self {
-        self { ram: [0; 65536] }
+        Self { ram: [0; 65536] }
     }
 
     pub fn read_byte(&self, address: u16) -> u8 {
