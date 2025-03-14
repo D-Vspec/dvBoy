@@ -8,7 +8,7 @@ pub struct Registers {
     f: u8,
     h: u8,
     l: u8,
-    pub pc: u16,
+    pc: u16,
     sp: u16,
 }
 
@@ -19,6 +19,15 @@ impl Registers {
             sp: 0xFFE,
             ..Default::default()
         }
+    }
+
+    pub fn get_pc_address(&self) -> u16 {
+        self.pc
+    }
+
+    pub fn increment_pc(&mut self) -> u16 {
+        self.pc += 1;
+        self.pc
     }
 
     pub fn get_af(&self) -> u16 {

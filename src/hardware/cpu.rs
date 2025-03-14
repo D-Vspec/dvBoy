@@ -8,7 +8,6 @@ use std::time::{Duration, Instant};
 pub struct CPU {
     pub registers: Registers,
     pub memory: Memory,
-    pub clock_cycles: u32, //change to 64 if not refreshing
 }
 
 const GAMEBOY_CLOCK_HZ: u64 = 4_194_304;
@@ -19,7 +18,6 @@ impl CPU {
         Self {
             memory: Memory::new(),
             registers: Registers::new(),
-            clock_cycles: 0,
         }
     }
 
@@ -32,13 +30,18 @@ impl CPU {
 
     pub fn run(&mut self) {
         let mut start_time = Instant::now();
-
+        let mut counter = 0;
         loop {
             let mut cycles_this_frame = 0;
 
+            println!("{}", self.registers.get_pc_address());
+
             while cycles_this_frame < CYCLES_PER_FRAME {
-                let opcode = 0x00;
+                let opcode = self.fetch_curr_byte();
                 let cycles = instructions::execute_opcode(self, opcode);
+
+                println!("{}", opcode);
+                println!("{}", cycles);
 
                 cycles_this_frame += cycles as u64;
             }
@@ -51,12 +54,20 @@ impl CPU {
             }
 
             start_time = Instant::now();
+            break;
         }
+    }
+
+    pub fn fetch_byte_increment(&mut self) -> u8 {
+        self.memory.read_byte(self.registers.increment_pc())
+    }
+
+    pub fn fetch_curr_byte(&self) -> u8 {
+        self.memory.read_byte(self.registers.get_pc_address())
     }
 
     pub fn reset(&mut self) {
         self.registers = Registers::new();
         self.memory = Memory::new();
-        self.clock_cycles = 0;
     }
 }
